@@ -47,8 +47,8 @@ class AverageSendingRate extends Component {
               appIds={this.props.buildNames}
               onChange={this.handleChangeBuildName} 
               />
-              <SendingRate 
-              sendingRates={this.props.avgSendingRatesPerBuildNameAndBuildVer} 
+              <SendingRate
+                sendingRates={this.props.avgSendingRatesPerBuildNameAndBuildVer} 
             />
           </Card>          
         </Card.Group>       

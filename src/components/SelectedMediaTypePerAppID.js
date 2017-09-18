@@ -11,6 +11,8 @@ export default class SelectedMediaTypePerAppID extends Component {
     if (!(mediaTypes)) {
       <Loader active inline='centered' />
     }
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    let cell = mediaTypes.map((mediaType, index) => <Cell fill={COLORS[index % COLORS.length]} />)
     return (
       <PieChart 
         width={800} 
@@ -25,9 +27,7 @@ export default class SelectedMediaTypePerAppID extends Component {
           label
           labelLine
         />
-        {
-          mediaTypes.map((mediaType, index) => <Cell fill={Color[index % Color.length]} />)
-        }
+        {cell}
         <Tooltip/>
 			</PieChart>
     );    
