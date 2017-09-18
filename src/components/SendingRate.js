@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { LineChart, Line, YAxis, Tooltip } from 'recharts';
 import {
-  sendingRateKey
+  SENDING_RATE_KEY
 } from '../config/metricsConfig';
 import Styles from './Styles/SendingRateStyle';
 import { Loader } from 'semantic-ui-react';
@@ -18,7 +18,7 @@ export default class SendingRate extends Component {
           margin={Styles.lineChartStyle}>    
           <YAxis/>
           <Tooltip/>
-          <Line type="monotone" dataKey={sendingRateKey} stroke="#82ca9d" />          
+          <Line type="monotone" dataKey={SENDING_RATE_KEY} stroke="#82ca9d" />          
         </LineChart>
       </div>
     )

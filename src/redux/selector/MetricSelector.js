@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
 import {
-  sendingRateKey,
-  buildVer,
-  buildName,
-  mediaType
+  SENDING_RATE_KEY,
+  BUILD_VER,
+  BUILD_NAME,
+  MEDIA_TYPE
 } from '../../config/metricsConfig';
 
 const metrics = state => state.payload;
@@ -37,7 +37,7 @@ export const getTextAndValueOfAppId = createSelector([getAppIds], appIds => {
 
 export const getAllBuildVer = createSelector([metrics, getAppIds], (metrics, appIds) => {
   if (appIds && appIds.length) {
-    return getUniqueOption(metrics, buildVer);
+    return getUniqueOption(metrics, BUILD_VER);
   }
 });
 /**
@@ -62,7 +62,7 @@ function getUniqueOption(metrics, key) {
 
 const getAllBuildName = createSelector([metrics, getAppIds], (metrics, appIds) => {
   if (appIds && appIds.length) {
-    return getUniqueOption(metrics, buildName);
+    return getUniqueOption(metrics, BUILD_NAME);
   }
 })
 
@@ -101,7 +101,7 @@ export const getAvgSendingRates = createSelector([metrics, getAppIds], (metrics,
     const avgSendingRates = [];
     for (let appID in metrics) {
       let sendingRates = metrics[appID]
-        .map(metric => metric[sendingRateKey])
+        .map(metric => metric[SENDING_RATE_KEY])
       
       const totalSendingRate = sendingRates.length;
       let sumSendingRate = sendingRates.reduce((sum, value) => {
@@ -113,7 +113,7 @@ export const getAvgSendingRates = createSelector([metrics, getAppIds], (metrics,
         }, 0)
       avgSendingRates.push({
         appID,
-        [sendingRateKey]: sumSendingRate / totalSendingRate
+        [SENDING_RATE_KEY]: sumSendingRate / totalSendingRate
       })
     }
     return avgSendingRates;
@@ -130,10 +130,10 @@ export const getAvgSendingRatesPerBuildNameAndBuildVer
 
     for(let appID in metrics) {
       let sendingRatePerBuildNameAndBuildVer = metrics[appID].map(metric => {
-        const currentBuildName = metric[buildName];
-        const currentBuildVer = metric[buildVer];
+        const currentBuildName = metric[BUILD_NAME];
+        const currentBuildVer = metric[BUILD_VER];
         if (currentBuildName === defaultBuildName && currentBuildVer === defaultBuildVer) {
-          return metric[sendingRateKey];
+          return metric[SENDING_RATE_KEY];
         }
         return 0;
       });
@@ -148,7 +148,7 @@ export const getAvgSendingRatesPerBuildNameAndBuildVer
       }, 0)
       avgSendingRatesPerBuildNamesAndBuildVer.push({
         appID,
-        [sendingRateKey]: sumSendingRatePerBuildNameAndBuildVer / totalSendingRatePerBuildNameAndBuildVer
+        [SENDING_RATE_KEY]: sumSendingRatePerBuildNameAndBuildVer / totalSendingRatePerBuildNameAndBuildVer
       })      
     }
     return avgSendingRatesPerBuildNamesAndBuildVer;
@@ -160,7 +160,7 @@ export const getBuildVer = createSelector([metrics, getAppIds], (metrics, appIDs
     let buildVers = [];
     for(let metric in metrics) {
       return metrics[metric].filter(stats => {
-        const currentBuildVer = stats[buildVer];
+        const currentBuildVer = stats[BUILD_VER];
         return currentBuildVer && buildVers.indexOf(currentBuildVer) !== -1;
       });
     }
@@ -181,7 +181,7 @@ export const getTotalMediaTypes =
 
 function getMediaTypes(metrics, appId) {
   let mediaTypes = metrics[appId].map(metric => {
-    return metric[mediaType];
+    return metric[MEDIA_TYPE];
   }).reduce((sum, value) => {
     if (value) {
       sum[value] = ++sum[value] || 1;

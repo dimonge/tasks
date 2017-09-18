@@ -1,4 +1,4 @@
-export const sendingRateKey = 'meanSendingRateKbps';
-export const buildName = 'buildName';
-export const buildVer = 'buildVer';
-export const mediaType = 'mediaType';
+export const SENDING_RATE_KEY = 'meanSendingRateKbps';
+export const BUILD_NAME = 'buildName';
+export const BUILD_VER = 'buildVer';
+export const MEDIA_TYPE = 'mediaType';
