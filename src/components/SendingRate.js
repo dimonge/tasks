@@ -5,11 +5,11 @@ import {
 } from '../config/metricsConfig';
 import Styles from './Styles/SendingRateStyle';
 import { Loader } from 'semantic-ui-react';
+
 export default class SendingRate extends Component {  
   render() {
     const { sendingRates } = this.props;
-    console.log(sendingRates);
-    if (!(sendingRates && sendingRates.length)) {
+    if (!sendingRates) {
       <Loader active inline='centered' />
     }
     return (
@@ -22,6 +22,5 @@ export default class SendingRate extends Component {
         </LineChart>
       </div>
     )
-    
   }
 }

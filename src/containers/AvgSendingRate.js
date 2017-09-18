@@ -31,7 +31,7 @@ class AverageSendingRate extends Component {
       <div>
         <Card.Group>
           <Card style={Styles.cardContainer} fluid>
-            <Card.Content header='Average Sending Rate' />
+            <Card.Content header='Average Sending Rate Across all AppID' />
             <SendingRate sendingRates={this.props.avgSendingRates} />
           </Card>
           <Card style={Styles.cardContainer} 

@@ -8,7 +8,7 @@ import { Loader } from 'semantic-ui-react';
 export default class SelectedMediaTypePerAppID extends Component {
   render() {
     const { mediaTypes } = this.props;
-    if (!(mediaTypes && mediaTypes.length)) {
+    if (!(mediaTypes)) {
       <Loader active inline='centered' />
     }
     return (
