@@ -2,15 +2,12 @@ import $ from 'jquery';
 /**
  * Actions 
  */
-export const REQUEST_STATISTICS = 'REQUEST_STATISTICS';
 export const RECEIVED_STATISTICS = 'RECEIVED_STATISTICS';
 
 export const GET_SENDING_RATE_PER_APPID = 'GET_SENDING_RATE_PER_APPID';
 export const GET_BUILD_VER = 'GET_BUILD_VER';
+export const GET_BUILD_NAME = 'GET_BUILD_NAME';
 
-export const GET_AVG_SENDING_RATE_ACROSS_APPIDS = 'GET_AVG_SENDING_RATE_ACROSS_APPIDS';
-//export const GET_AVG_SENDING_RATE_OF_BUILD_NAME_AND_BUILD_VER 
-//  = 'GET_AVG_SENDING_RATE_OF_BUILD_NAME_AND_BUILD_VER';
 export const GET_MEDIA_TYPE_PER_APPID = 'GET_MEDIA_TYPE_PER_APPID';
 
 
@@ -19,25 +16,10 @@ export const GET_MEDIA_TYPE_PER_APPID = 'GET_MEDIA_TYPE_PER_APPID';
  * Action creators
  */
 
-/*
-function processMetrics(metrics) {
-  let transformMetrics = {};
-
-  metrics.forEach(row => {
-    const appID = row.appID;
-    if (!transformMetrics[appID]) {
-      transformMetrics[appID] = [row];
-    } else {
-      transformMetrics[appID] = transformMetrics[appID].concat(row);
-    }
-  });
-  return transformMetrics;
-}
-*/
-
 export function fetchStatistics() {
+  window.Papa.LocalChunkSize = 1024 * 1024;
+  console.log(window.Papa.LocalChunkSize)
   return (dispatch) => {
-    dispatch(requestStatistics());
     $.ajax({
       url: '/metrics.csv',
       type: 'GET',
@@ -47,13 +29,13 @@ export function fetchStatistics() {
           delimiter: "\t",
           header: true,
           worker: true,
-          preview: 5000,
           dynamicTyping: true,
-          complete: function(results) {
+          chunk: function(results) {
             if (results.data) {
               dispatch(receivedStatistics(results.data));
             }
           },
+          complete: function(results) {},
           error: function(error) {
             console.log(error);
           }
@@ -63,11 +45,7 @@ export function fetchStatistics() {
   }
 }
 
-function requestStatistics() {
-  return {
-    type: REQUEST_STATISTICS
-  }
-}
+
 
 function receivedStatistics(payload) {
   return {
@@ -77,9 +55,8 @@ function receivedStatistics(payload) {
 }
 
 /**
- * 
- * @param {*returns appId} 
- * @param {*returns the metrics related to }
+ * Action creator for sending the appId to the reducer to show the sending rates
+ * @param {*appId}
  */
 export function getSendingRatePerAppId(appId) {
   return {
@@ -87,20 +64,30 @@ export function getSendingRatePerAppId(appId) {
     appId
   }
 }
-
-export function getAvgSendingRateAcrossAppIds() {
-  return {
-    type: GET_AVG_SENDING_RATE_ACROSS_APPIDS
-  };
-}
-
+/**
+ * Action creator to handle change in build version number
+ * @param {*buildVer} 
+ */
 export function getBuildVer(buildVer) {
   return {
     type: GET_BUILD_VER,
     buildVer
   }
 }
-
+/**
+ * Action creator to handle change in build name
+ * @param {*buildName}  
+ */
+export function getBuildName(buildName) {
+  return {
+    type: GET_BUILD_NAME,
+    buildName
+  }
+}
+/**
+ * Action creator to handle change in appId to show the media types
+ * @param {*appId}  
+ */
 export function getMediaTypePerAppId(appId) {
   return {
     type: GET_MEDIA_TYPE_PER_APPID,

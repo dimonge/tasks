@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SelectedMediaTypePerAppID from '../components/SelectedMediaTypePerAppID';
-import SelectedPerAppID from '../components/SelectedPerAppID';
+import SelectedItem from '../components/SelectedItem';
 import {
   getMediaTypePerAppId
 } from '../redux/actions/MetricsAction';
@@ -9,6 +9,8 @@ import {
   getTextAndValueOfAppId,
   getTotalMediaTypes
 } from '../redux/selector/MetricSelector';
+import { Card } from 'semantic-ui-react';
+import Styles from './Styles/styles';
 
 class MediaTypePerAppID extends Component {
   constructor(props) {
@@ -17,20 +19,21 @@ class MediaTypePerAppID extends Component {
 
   }
   handleChangeAppId(event, {value}) {
-  	console.log(event, value)
   	this.props.getMediaTypePerAppId(value);
   }
   render() {
     return (
-      <div>
-        <h2>Media Types Per AppIDs</h2>
-        <SelectedPerAppID 
+      <Card 
+        style={Styles.cardContainer} 
+        fluid>    
+        <Card.Content header='Media Types Per AppIDs' />   
+        <SelectedItem 
           selectedSendingRate={this.props.selectedSendingRate} 
           appIds={this.props.appIds} 
           onChange={this.handleChangeAppId}
         />
         <SelectedMediaTypePerAppID mediaTypes={this.props.mediaTypes}/>
-      </div>
+      </Card>
     );
   }
 }

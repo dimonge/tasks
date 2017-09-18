@@ -24,10 +24,6 @@ class App extends Component {
   
   render() {
     let styles = this.getStyles();
-   /* if (this.props.isFetching) {
-      return <div>loading...</div>;
-    }
-    */
     return (
       <div>
         <div style={styles.title}>          
@@ -40,11 +36,7 @@ class App extends Component {
     );
   }
 }
-const mapStateToProps = state => {
-  return {
-    //isFetching: state.isFetchingStats
-  }
-}
+
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -54,4 +46,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(null, mapDispatchToProps)(App);

@@ -6,6 +6,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './redux';
 import 'semantic-ui-css/semantic.min.css';
+
 const store = configureStore();
 
 ReactDOM.render(

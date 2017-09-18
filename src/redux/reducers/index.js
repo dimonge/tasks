@@ -1,9 +1,8 @@
 import {
-  REQUEST_STATISTICS,
   RECEIVED_STATISTICS,
   GET_SENDING_RATE_PER_APPID,
-  GET_AVG_SENDING_RATE_ACROSS_APPIDS,
   GET_BUILD_VER,
+  GET_BUILD_NAME,
   GET_MEDIA_TYPE_PER_APPID
 } from '../actions/MetricsAction';
 
@@ -16,30 +15,27 @@ const initialState = {
 }
 export default function getAverageId(state = initialState, action) {
   switch(action.type) {
-    case REQUEST_STATISTICS: 
-      return Object.assign({}, state, {
-        isFetchingStats: true
-      })
     case RECEIVED_STATISTICS:
       const payload = processMetrics(action.payload);
-      return Object.assign({}, state, {
-        payload: Object.assign({}, state.payload, payload),
-        isFetchingStats: false
+      return nextState(state, {
+        payload: nextState(state.payload, payload)
       });
     case GET_SENDING_RATE_PER_APPID:
-      return Object.assign({}, state, {
+      return nextState(state, {
         selectedSendingRate: action.appId
       });
-    case GET_AVG_SENDING_RATE_ACROSS_APPIDS:
-      return state;
     case GET_MEDIA_TYPE_PER_APPID:
-      return Object.assign({}, state, {
+      return nextState(state, {
         selectedAppIDForMediaType: action.appId
       });
     case GET_BUILD_VER: 
       return nextState(state, {
         selectedBuildVer: action.buildVer
       })
+    case GET_BUILD_NAME: 
+      return nextState(state, {
+        selectedBuildName: action.buildName
+      });
     default:
       return state;
   }
@@ -48,7 +44,6 @@ export default function getAverageId(state = initialState, action) {
 function nextState(oldState, newState) {
   return Object.assign({}, oldState, newState);
 }
-
 
 function processMetrics(metrics) {
   let transformMetrics = {};
