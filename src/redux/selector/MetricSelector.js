@@ -2,42 +2,107 @@ import { createSelector } from 'reselect';
 import {
   sendingRateKey,
   buildVer,
-  buildName
+  buildName,
+  mediaType
 } from '../../config/metricsConfig';
+
 const metrics = state => state.payload;
+const selectedSendingRate = state => state.selectedSendingRate;
+const selectedAppIDForMediaType = state => state.selectedAppIDForMediaType;
+const selectedBuildName = state => state.buildName;
+const selectedBuildVer = state => state.buildVer;
 
 const getMetricsKey = createSelector([metrics], metrics => {
   return Object.keys(metrics);
 }) 
-const getAppIds = createSelector([metrics, getMetricsKey], (metrics, metricsKey) => {
-  if (metricsKey.length) {
-    return metricsKey;
+const getAppIds = createSelector([metrics], (metrics) => {
+  if (Object.keys(metrics).length) {
+    return Object.keys(metrics);
   }
+  return [];
 });
 
+const getDefaultAppID = createSelector([metrics, getAppIds], (metrics, appID) => {
+  if (appID && appID.length) {
+    return appID[0];
+  }
+  return null;
+}); 
+
 export const getTextAndValueOfAppId = createSelector([getAppIds], appIds => {
-  if (appIds) {
+  if (appIds && appIds.length) {
     return appIds.map(appId => {
       return {text: appId, value: appId};
     })
   }
   return [];
+});
+
+export const getAllBuildVer = createSelector([metrics, getAppIds], (metrics) => {
+  if (appIds && appIds.length) {
+    for(let appID in metrics) {
+      let allBuildVer = metrics[appID].map((metric) => {
+        if (metric[buildVer] && metric[buildVer].length) {
+          return metric[buildVer]
+        }
+      });
+      return allBuildVer.filter((buildVer, index, self) => {
+        if (buildVer) {
+          return self.indexOf(buildVer) === index;
+        }
+      });
+    }
+  }
+});
+
+function getUniqueOptions(metrics) {
+  for(let appID in metrics) {
+    let allBuildVer = metrics[appID].map((metric) => {
+      if (metric[buildVer] && metric[buildVer].length) {
+        return metric[buildVer]
+      }
+    });
+    return allBuildVer.filter((buildVer, index, self) => {
+      if (buildVer) {
+        return self.indexOf(buildVer) === index;
+      }
+    });
+  }
+}
+const getAllBuildName = createSelector([metrics, getAppIds], (metrics, appIds) => {
+
 })
 
-export const getCurrentSendingRates = createSelector([metrics, getAppIds], (metrics, appIds) => {
+export const getTextAndValueOfBuildVer = createSelector([getAllBuildVer], buildVers => {
+  if (buildVers && buildVers.length) {
+    return buildVers.map(buildVer => {
+      return {text: buildVer, value: buildVer};
+    })
+  }
+  return [];
+})
+
+
+
+export const getCurrentSendingRates = 
+  createSelector([metrics, getAppIds, getDefaultAppID, selectedSendingRate], (metrics, appIds, defaultAppID, selectedSendingRate) => {
   if (appIds && appIds.length) {
-    console.log(metrics[appIds[0]])
-    return metrics[appIds[0]];
+    if (selectedSendingRate){
+      return metrics[selectedSendingRate];
+    }
+    return metrics[defaultAppID];
   }
 })
 
-export const getAvgSendingRates = createSelector([metrics, getMetricsKey], (metrics, metricsKey) => {
-  if (metricsKey && metricsKey.length) {
+export const getAvgSendingRates = createSelector([metrics, getAppIds], (metrics, appIDs) => {
+  if (appIDs && appIDs.length) {
     const avgSendingRates = [];
     for (let appID in metrics) {
-      let avgSendingRate = metrics[appID]
+      let sendingRates = metrics[appID]
         .map(metric => metric[sendingRateKey])
-        .reduce((sum, value) => {
+      
+      const totalSendingRate = sendingRates.length;
+      let sumSendingRate = sendingRates.reduce((sum, value) => {
           if (typeof value === 'number') {
             return sum + value;
           } else {
@@ -46,30 +111,50 @@ export const getAvgSendingRates = createSelector([metrics, getMetricsKey], (metr
         }, 0)
       avgSendingRates.push({
         appID,
-        [sendingRateKey]: avgSendingRate
+        [sendingRateKey]: sumSendingRate / totalSendingRate
       })
     }
     return avgSendingRates;
   }
 });
 
-export const getBuildName = createSelector([metrics, getMetricsKey], (metrics, metricsKey) => {
-  if (metricsKey) {
-    let buildNames = [];
-    for(let metric in metrics) {
-      metrics[metric].map(stats => {
-        const buildName = stats[buildName];
-        if (buildName && buildNames.indexOf(buildName) !== -1) {
-          buildNames.push(buildName)
+export const getAvgSendingRatesPerBuildNameAndBuildVer
+  = createSelector([metrics, getAppIds, getAllBuildVer, selectedBuildName, selectedBuildVer], 
+                      (metrics, appIDs, getAllBuildVer, selectedBuildName, selectedBuildVer) => {
+  if (appIDs && appIDs.length) {
+    let avgSendingRatesPerBuildNamesAndBuildVer = [];
+    const defaultBuildName = metrics[defaultAppID[buildName]];
+    const defaultBuildVer = getAllBuildVer[0];
+    for(let appID in metrics) {
+
+      let sendingRatePerBuildNameAndBuildVer = metrics[appID].map(metric => {
+        const buildName = metric[buildName];
+        const buildVer = metric[buildVer];
+        if (buildName === selectedBuildName && buildVer === selectedBuildVer) {
+          return metric[sendingRateKey];
+        } else if (buildName === defaultBuildName && buildVer === defaultBuildVer) {
+          return metric[sendingRateKey];
         }
       });
-    }
-    return buildNames;
+      let totalSendingRatePerBuildNameAndBuildVer = sendingRatePerBuildNameAndBuildVer.length;
+      let sumSendingRatePerBuildNameAndBuildVer = sendingRatePerBuildNameAndBuildVer.reduce((sum, value) => {
+        if (typeof value === 'number') {
+          return sum + value;
+        } else {
+          return sum;
+        }
+      }, 0)
+      avgSendingRatesPerBuildNamesAndBuildVer.push({
+        appID,
+        [sendingRateKey]: sumSendingRatePerBuildNameAndBuildVer / totalSendingRatePerBuildNameAndBuildVer
+      })
+    return avgSendingRatesPerBuildNamesAndBuildVer;
+    }    
   };
 })
 
-export const getBuildVer = createSelector([metrics, getMetricsKey], (metrics, metricsKey) => {
-  if (metricsKey) {
+export const getBuildVer = createSelector([metrics, getAppIds], (metrics, appIDs) => {
+  if (appIDs && appIDs.length) {
     let buildVers = [];
     for(let metric in metrics) {
       metrics[metric].map(stats => {
@@ -82,9 +167,31 @@ export const getBuildVer = createSelector([metrics, getMetricsKey], (metrics, me
     return buildVers;
   };
 })
-export const getAvgSendingRatesPerBuildNameAndBuildVer = createSelector([metrics, getMetricsKey], (metrics, metricsKey) => {
-  if (metricsKey && metricsKey.length) {
-    return metrics;
+export const getTotalMediaTypes = 
+  createSelector([metrics, getAppIds, getDefaultAppID, selectedAppIDForMediaType], 
+                  (metrics, appIDs, defaultAppID, selectedAppID) => {
+  if (appIDs && appIDs.length) {
+    if (selectedAppID) {
+      return getMediaTypes(metrics, selectedAppID)
+    }
+    return getMediaTypes(metrics, defaultAppID);
   }
-  return metrics;
-})
+  return [];
+});
+
+function getMediaTypes(metrics, appId) {
+  let mediaTypes = metrics[appId].map(metric => {
+    return metric[mediaType];
+  }).reduce((sum, value) => {
+    if (value) {
+      sum[value] = ++sum[value] || 1;
+      return sum;
+    }
+    return sum;    
+  }, {})
+
+  return Object.keys(mediaTypes).map(mediaType => {
+    return {name: mediaType, value: mediaTypes[mediaType]};
+  })
+
+}

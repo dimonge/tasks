@@ -3,15 +3,15 @@ import {
   RECEIVED_STATISTICS,
   GET_SENDING_RATE_PER_APPID,
   GET_AVG_SENDING_RATE_ACROSS_APPIDS,
-  GET_AVG_SENDING_RATE_OF_BUILD_NAME_AND_BUILD_VER,
+  GET_BUILD_VER,
   GET_MEDIA_TYPE_PER_APPID
 } from '../actions/MetricsAction';
 
 const initialState = {
   payload: [],
   selectedSendingRate: null,
-  buildName: null,
-  buildVer: null,
+  selectedBuildName: null,
+  selectedBuildVer: null,
   selectedAppIDForMediaType: null
 }
 export default function getAverageId(state = initialState, action) {
@@ -27,16 +27,26 @@ export default function getAverageId(state = initialState, action) {
         isFetchingStats: false
       });
     case GET_SENDING_RATE_PER_APPID:
-      return state;
+      return Object.assign({}, state, {
+        selectedSendingRate: action.appId
+      });
     case GET_AVG_SENDING_RATE_ACROSS_APPIDS:
       return state;
-    case GET_AVG_SENDING_RATE_OF_BUILD_NAME_AND_BUILD_VER:
-      return state;
     case GET_MEDIA_TYPE_PER_APPID:
-      return state;
+      return Object.assign({}, state, {
+        selectedAppIDForMediaType: action.appId
+      });
+    case GET_BUILD_VER: 
+      return nextState(state, {
+        selectedBuildVer: action.buildVer
+      })
     default:
       return state;
   }
+}
+
+function nextState(oldState, newState) {
+  return Object.assign({}, oldState, newState);
 }
 
 

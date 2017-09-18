@@ -9,7 +9,7 @@ export default class SelectedPerAppID extends Component {
     return <Dropdown
       style={{margin: '7px 80px'}}
       options={this.props.appIds} 
-      onClick={this.props.onClick}
+      onChange={this.props.onChange}
       defaultValue={this.props.selectedSendingRate || this.props.appIds[0].value}
     />
   }

@@ -6,12 +6,14 @@ export const REQUEST_STATISTICS = 'REQUEST_STATISTICS';
 export const RECEIVED_STATISTICS = 'RECEIVED_STATISTICS';
 
 export const GET_SENDING_RATE_PER_APPID = 'GET_SENDING_RATE_PER_APPID';
-
+export const GET_BUILD_VER = 'GET_BUILD_VER';
 
 export const GET_AVG_SENDING_RATE_ACROSS_APPIDS = 'GET_AVG_SENDING_RATE_ACROSS_APPIDS';
-export const GET_AVG_SENDING_RATE_OF_BUILD_NAME_AND_BUILD_VER 
-  = 'GET_AVG_SENDING_RATE_OF_BUILD_NAME_AND_BUILD_VER';
+//export const GET_AVG_SENDING_RATE_OF_BUILD_NAME_AND_BUILD_VER 
+//  = 'GET_AVG_SENDING_RATE_OF_BUILD_NAME_AND_BUILD_VER';
 export const GET_MEDIA_TYPE_PER_APPID = 'GET_MEDIA_TYPE_PER_APPID';
+
+
 
 /**
  * Action creators
@@ -92,18 +94,18 @@ export function getAvgSendingRateAcrossAppIds() {
   };
 }
 
-export function getAvgSendingRateOfBuildNameAndBuildVer(buildName, buildVer) {
+export function getBuildVer(buildVer) {
   return {
-    type: GET_AVG_SENDING_RATE_OF_BUILD_NAME_AND_BUILD_VER,
-    buildName, 
+    type: GET_BUILD_VER,
     buildVer
   }
 }
 
-export function getMediaTypePerAppId(appId, mediaTypes) {
+export function getMediaTypePerAppId(appId) {
   return {
     type: GET_MEDIA_TYPE_PER_APPID,
-    mediaTypes,
     appId
   }
 }
+
+
