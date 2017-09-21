@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import './App.css';
 import {
@@ -46,4 +46,8 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
+App.propTypes = {
+  fetchStatistics: PropTypes.func
+};
 export default connect(null, mapDispatchToProps)(App);
+

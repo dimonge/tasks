@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {PieChart, Pie, Tooltip, Cell} from 'recharts';
 import {
   Color
@@ -32,4 +32,8 @@ export default class SelectedMediaTypePerAppID extends Component {
 			</PieChart>
     );    
   }
+}
+
+SelectedMediaTypePerAppID.propTypes = {
+
 }
