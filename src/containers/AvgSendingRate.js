@@ -14,6 +14,7 @@ import {
 } from '../redux/actions/MetricsAction';
 import { Card } from 'semantic-ui-react';
 import Styles from './Styles/styles';
+
 class AverageSendingRate extends Component {
   constructor() {
     super();

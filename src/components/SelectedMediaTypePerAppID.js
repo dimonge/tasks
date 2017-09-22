@@ -1,23 +1,24 @@
-import React, { Component, PropTypes } from 'react';
-import {PieChart, Pie, Tooltip, Cell} from 'recharts';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types'; 
+import {PieChart, Pie, Tooltip, Cell, Legend} from 'recharts';
 import {
-  Color
+  Colors
 } from './Styles/SelectedMediaTypePerAppIDStyle';
-import { Loader } from 'semantic-ui-react';
-
+import LoadingIndicator from './LoadingIndicator';
 export default class SelectedMediaTypePerAppID extends Component {
   render() {
     const { mediaTypes } = this.props;
-    if (!(mediaTypes)) {
-      <Loader active inline='centered' />
+    console.log(mediaTypes)
+    if (!(mediaTypes.length)) {
+      return <LoadingIndicator />
     }
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-    let cell = mediaTypes.map((mediaType, index) => <Cell fill={COLORS[index % COLORS.length]} />)
+    let cell = mediaTypes.map((mediaType, index) => <Cell key={`cell-${index}`} fill={Colors[index]} />)
     return (
       <PieChart 
         width={800} 
         height={400}>
         <Pie 
+          dataKey='value'
           data={mediaTypes} 
           cx={500} 
           cy={200} 
@@ -26,14 +27,21 @@ export default class SelectedMediaTypePerAppID extends Component {
           fill="#82ca9d" 
           label
           labelLine
-        />
+        >
         {cell}
-        <Tooltip/>
+        </Pie>
+        <Legend verticalAlign="top" height={36}/>
+        <Tooltip />      
 			</PieChart>
     );    
   }
 }
 
 SelectedMediaTypePerAppID.propTypes = {
-
-}
+  mediaTypes: PropTypes.arrayOf(
+    PropTypes.shape({
+      text: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    })
+  ),
+};

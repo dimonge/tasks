@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types'; 
 import { connect } from 'react-redux';
 import './App.css';
 import {
@@ -10,7 +11,6 @@ import MediaTypePerAppID from './containers/MediaTypePerAppID';
 
 class App extends Component {  
   getStyles() {
-
     return {
       title: {
         fontSize: '1.2rem'

@@ -17,7 +17,7 @@ export const GET_MEDIA_TYPE_PER_APPID = 'GET_MEDIA_TYPE_PER_APPID';
  */
 
 export function fetchStatistics() {
-  window.Papa.LocalChunkSize = 1024 * 1024;
+  window.Papa.LocalChunkSize = 1024;
   return (dispatch) => {
     $.ajax({
       url: '/metrics.csv',

@@ -13,17 +13,11 @@ const selectedBuildName = state => state.selectedBuildName;
 const selectedBuildVer = state => state.selectedBuildVer;
 
 const getAppIds = createSelector([metrics], (metrics) => {
-  if (Object.keys(metrics).length) {
-    return Object.keys(metrics);
-  }
-  return [];
+  return Object.keys(metrics).length && Object.keys(metrics);  
 });
 
-const getDefaultAppID = createSelector([metrics, getAppIds], (metrics, appID) => {
-  if (appID && appID.length) {
-    return appID[0];
-  }
-  return null;
+const getDefaultAppID = createSelector([getAppIds], (appID) => {
+  return appID && appID.length && appID[0];
 }); 
 
 export const getTextAndValueOfAppId = createSelector([getAppIds], appIds => {
